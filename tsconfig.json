@@ -1,0 +1,16 @@
+{
+  "compileOnSave": true,
+  "compilerOptions": {
+    "module": "commonjs",
+    "noImplicitAny": true,
+    "removeComments": true,
+    "preserveConstEnums": true,
+    "rootDir": "src",
+    "outDir": "lib",
+    "sourceMap": false,
+    "target": "es6",
+    "declaration": true,
+    "declarationDir": "./lib/definitions",
+    "experimentalDecorators": true
+  }
+}
