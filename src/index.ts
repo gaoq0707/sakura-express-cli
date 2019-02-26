@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 /// Copyright 2018 Gao Qiang (gaoqiang@gagogroup.cn). All rights reserved.
 // Use of this source code is governed a license that can be found in the LICENSE file.
 
@@ -11,6 +13,7 @@ import * as fs from "fs";
 import * as chalk from "chalk";
 import * as path from "path";
 import * as download from "download";
+import * as Handlebars from "handlebars";
 
 let program: Command = new Command();
 
@@ -31,7 +34,6 @@ program
 * */
 program
   .command("init")
-  .option("-t, --template <template>", "templateName", "local")
   .alias("i")
   .description("创建新项目(可使用模版)")
   .action(async function (name, command) {
@@ -67,7 +69,7 @@ program
         let spinner = ora("正在下载模版...");
         spinner.start("开始下载...");
         try {
-          let downloadUrl: string = "http://git.azure.gagogroup.cn/project-standard/project-base-api/repository/master/archive.zip";
+          let downloadUrl: string = "https://github.com/gaoq0707/sakura-express-base-api/archive/master.zip";
           let downLoadResult: any = await download(downloadUrl, answers.projectName, {
             extract: true,
             strip: 1,
@@ -75,17 +77,29 @@ program
               accept: "application/zip"
             }
           });
+
           for (let file of downLoadResult) {
             spinner.info(chalk.default.gray(file.type + ":" + file.path));
           }
           if (downLoadResult) {
             spinner.succeed(chalk.default.green("下载完成..."));
-
             // 渲染package.json
-            let packageJsonPath: string = `${name}/package.json`;
+            let packageJsonPath: string = `${projectPath}/package.json`;
             let packageJsonContent: string = fs.readFileSync(packageJsonPath).toString();
             fs.writeFileSync(packageJsonPath, Handlebars.compile(packageJsonContent)(answers));
             console.log(symbols.success, chalk.default.green("渲染 package.json 完成!"));
+
+            // 渲染bin/build_docker_image.sh
+            let buildDockerImagePath: string = `${projectPath}/bin/build_docker_image.sh`;
+            let buildDockerImageContent: string = fs.readFileSync(buildDockerImagePath).toString();
+            fs.writeFileSync(buildDockerImagePath, Handlebars.compile(buildDockerImageContent)(answers));
+            console.log(symbols.success, chalk.default.green("渲染 bin/build_docker_image.sh 完成!"));
+
+            // 渲染README.md
+            let readmePath: string = `${projectPath}/README.md`;
+            let readmeContent: string = fs.readFileSync(readmePath).toString();
+            fs.writeFileSync(readmePath, Handlebars.compile(readmeContent)(answers));
+            console.log(symbols.success, chalk.default.green("渲染 README.md 完成!"));
 
             console.log(symbols.success, chalk.default.green(`项目 [${answers.projectName}] 初始化完成!`));
           }

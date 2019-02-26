@@ -1,22 +1,16 @@
 # OVERVIEW
 
-gago-demo-token-validator 服务于demo授权验证操作.
-
-# 使用方法
-
-```typescript
-import {validator} from "../index";
-
-validator().then((result: boolean) => {
-  console.log("验证结果", result);
-});
-
-```
+基于express的gago风格的脚手架.
 
 # INSTALL
 
-`npm install gago-demo-token-validator`
+`npm install gago-express-cli -g`
 
-# TEST
 
-`npm test`
+# 使用方法
+
+```shell
+gago-express-cli init
+gago-cli init
+fi-cli init
+```
